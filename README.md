@@ -3,4 +3,4 @@ A course project - web application for selling and buying products
 
 ## Framework
 - Bootstrap 4
-- Spring boot
+- Spring Boot
