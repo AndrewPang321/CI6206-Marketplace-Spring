@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <meta charset="utf-8">
@@ -29,7 +29,7 @@
 </head>
 
 <body>
-<!--<script>
+<script>
     $(document).ready(function () {
 
         // LoginForm submission
@@ -43,100 +43,32 @@
                 beforeSend: function () {
                     $(".loader").css("display", "block");
                 },
-                success: function () {
-                    console.log("success");
-                },
-                error: function () {
-                    console.log("failure");
-                },
                 complete: function (res) {
                     console.log(res.status);
-                    switch (res.status) {
-                        case 200:
-                            showAlert({
-                                message: 'Login success. Redirect in 1 second',
-                                class: 'success'
-                            });
-                            setTimeout(function () {
-                                window.location.replace("index.html")
-                            }, 1500);
-                            break;
-                        case 400:
-                            showAlert({
-                                message: 'Incorrect Email/Password',
-                                class: 'danger'
-                            });
-                            break;
-                        default:
-                            showAlert({
-                                message: 'Some problems occur. Please try again',
-                                class: 'danger'
-                            });
-                    }
                     $(".loader").css("display", "none");
                 }
             });
-            return false;
         });
 
         // SignupForm submission
         $("#signupForm").submit(function (event) {
             var form = $(this);
-            var email = $("#signupEmail").val();
-            var password = $("#signupPassword").val();
-            var confirmPassword = $("#signupConfirmPassword").val();
-            if (!signupFormValidation(email, password, confirmPassword)) {
-                showAlert({
-                    message: 'Passwords are not the same',
-                    class: 'danger'
-                });
-            } else {
-                $.ajax({
-                    url: "signup",
-                    type: "POST",
-                    data: form.serialize(),
-                    beforeSend: function () {
-                        $(".loader").css("display", "block");
-                    },
-                    success: function () {
-                        console.log("success");
-                    },
-                    error: function () {
-                        console.log("failure");
-                    },
-                    complete: function (res) {
-                        console.log(res.status);
-                        switch (res.status) {
-                            case 201:
-                                showAlert({
-                                    message: 'Sign up success. Redirect in 1 second',
-                                    class: 'success'
-                                });
-                                setTimeout(function () {
-                                    window.location.replace("index.html")
-                                }, 1500);
-                                break;
-                            case 400:
-                                showAlert({
-                                    message: 'Email already existed. Please try another one',
-                                    class: 'danger'
-                                });
-                                break;
-                            default:
-                                showAlert({
-                                    message: 'Some problems occur. Please try again',
-                                    class: 'danger'
-                                });
-                        }
-                        $(".loader").css("display", "none");
-                    }
-                });
-            }
-            return false;
+            $.ajax({
+                url: "signup",
+                type: "POST",
+                data: form.serialize(),
+                beforeSend: function () {
+                    $(".loader").css("display", "block");
+                },
+                complete: function (res) {
+                    console.log(res.status);
+                    $(".loader").css("display", "none");
+                }
+            });
         });
 
     });
-</script>-->
+</script>
 
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -234,12 +166,8 @@
         </div>
       </div>
     </div>
-    <!--<div id="alertBox"></div>-->
-    <div class="alert alert-${class} alert-dismissible fade" role="alert" id="alert">
-      ${message}
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+    <div id="alertBox" class="alert alert-danger" role="alert" th:if="${display} == 'show'">
+      <span th:text="${msg}"></span>
     </div>
   </div>
 </div>

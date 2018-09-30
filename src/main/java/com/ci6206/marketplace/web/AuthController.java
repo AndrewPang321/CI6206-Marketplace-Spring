@@ -24,14 +24,47 @@ public class AuthController {
             Boolean success = true;
             if (success) {
                 // Authentication success, 200: Success
-                redirectAttributes.addFlashAttribute("class", "success");
-                redirectAttributes.addFlashAttribute("message", "Sign up success. Redirect in 1 second");
                 return "redirect:/";
             } else {
                 // Authentication fail, 400: Bad Request
+                redirectAttributes.addFlashAttribute("display", "show");
+                redirectAttributes.addFlashAttribute("msg", "Incorrect Email/Password");
                 return "redirect:/auth";
             }
         }
+        redirectAttributes.addFlashAttribute("display", "show");
+        redirectAttributes.addFlashAttribute("msg", "Some problems occur. Please try again");
+        return "redirect:/auth";
+    }
+
+    @PostMapping("/signup")
+    public String signup(@RequestParam(name="signupEmail") String email, @RequestParam(name="signupPassword") String password,
+                        @RequestParam(name="signupConfirmPassword") String confirmedPassword, RedirectAttributes redirectAttributes) {
+        System.out.println(email);
+        System.out.println(password);
+        System.out.println(confirmedPassword);
+        if (!"".equals(email) && !"".equals(password) && !"".equals(confirmedPassword)) {
+            if (!password.equals(confirmedPassword)) {
+                // Authentication fail, 400: Bad Request
+                redirectAttributes.addFlashAttribute("display", "show");
+                redirectAttributes.addFlashAttribute("msg", "Passwords are not the same");
+                return "redirect:/auth";
+            } else {
+                // TODO: Successful creation with DB
+                Boolean success = true;
+                if (success) {
+                    // Authentication success, 200: Success
+                    return "redirect:/";
+                } else {
+                    // Authentication fail, 400: Bad Request
+                    redirectAttributes.addFlashAttribute("display", "show");
+                    redirectAttributes.addFlashAttribute("msg", "Email already existed. Please try another one");
+                    return "redirect:/auth";
+                }
+            }
+        }
+        redirectAttributes.addFlashAttribute("display", "show");
+        redirectAttributes.addFlashAttribute("msg", "Some problems occur. Please try again");
         return "redirect:/auth";
     }
 
