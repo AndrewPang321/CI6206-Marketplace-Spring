@@ -171,9 +171,6 @@ CREATE TABLE t_user_account (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE INDEX ind_t_user_account ON t_user_account (user_id);
-
-
 # --This table contains all the audit for t_user_account
 CREATE TABLE t_user_account_audit (
   action_log_id int(16) PRIMARY KEY AUTO_INCREMENT NOT NULL,
