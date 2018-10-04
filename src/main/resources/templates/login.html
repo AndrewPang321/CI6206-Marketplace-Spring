@@ -33,39 +33,37 @@
     $(document).ready(function () {
 
         // LoginForm submission
-        $("#loginForm").submit(function (event) {
-            var form = $(this);
-
-            $.ajax({
-                url: "login",
-                type: "POST",
-                data: form.serialize(),
-                beforeSend: function () {
-                    $(".loader").css("display", "block");
-                },
-                complete: function (res) {
-                    console.log(res.status);
-                    $(".loader").css("display", "none");
-                }
-            });
-        });
+        // $("#loginForm").submit(function (event) {
+        //     var form = $(this);
+        //
+        //     $.ajax({
+        //         url: "login",
+        //         type: "POST",
+        //         data: form.serialize(),
+        //         beforeSend: function () {
+        //             $(".loader").css("display", "block");
+        //         },
+        //         complete: function (res) {
+        //             $(".loader").css("display", "none");
+        //         }
+        //     });
+        // });
 
         // SignupForm submission
-        $("#signupForm").submit(function (event) {
-            var form = $(this);
-            $.ajax({
-                url: "signup",
-                type: "POST",
-                data: form.serialize(),
-                beforeSend: function () {
-                    $(".loader").css("display", "block");
-                },
-                complete: function (res) {
-                    console.log(res.status);
-                    $(".loader").css("display", "none");
-                }
-            });
-        });
+        // $("#signupForm").submit(function (event) {
+        //     var form = $(this);
+        //     $.ajax({
+        //         url: "signup",
+        //         type: "POST",
+        //         data: form.serialize(),
+        //         beforeSend: function () {
+        //             $(".loader").css("display", "block");
+        //         },
+        //         complete: function (res) {
+        //             $(".loader").css("display", "none");
+        //         }
+        //     });
+        // });
 
     });
 </script>
@@ -141,7 +139,7 @@
           </a>
         </div>
         <div class="tab-pane fade" id="signup">
-          <form id="signupForm" action="signup" method="post">
+          <form id="signupForm" action="/signup" method="post">
             <div class="form-group row">
               <label for="signupEmail" class="col-sm-2 col-form-label">Email</label>
               <div class="col-sm-10">
@@ -179,9 +177,9 @@
               </div>
               <label for="signupGender" class="col-sm-2 col-form-label">Gender</label>
               <div class="col-sm-4">
-                <select class="form-control" id="signupGender" required>
-                  <option>M</option>
-                  <option>F</option>
+                <select class="form-control" id="signupGender" name="signupGender" required>
+                  <option value="M">M</option>
+                  <option value="F">F</option>
                 </select>
               </div>
             </div>
@@ -204,7 +202,7 @@
               </div>
               <label for="signupCountry" class="col-sm-2 col-form-label">Country</label>
               <div class="col-sm-4">
-                <select class="form-control input-medium bfh-countries" id="signupCountry" data-country="SG"></select>
+                <select class="form-control input-medium bfh-countries" id="signupCountry" name="signupCountry" data-country="SG"></select>
               </div>
             </div>
             <button type="submit" class="btn btn-success">Sign Up</button>
