@@ -3,6 +3,7 @@ package com.ci6206.marketplace.web.Auth;
 import com.ci6206.marketplace.web.Auth.model.User;
 import com.ci6206.marketplace.web.Auth.model.UserAccount;
 import com.ci6206.marketplace.web.Auth.repository.UserRepository;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,7 +45,7 @@ public class AuthController {
             return "redirect:/auth";
         }
 
-        if (password.equals(loginUser.getUserAccount().getPassword())) {
+        if (BCrypt.checkpw(password, loginUser.getUserAccount().getPassword())) {
             // Authentication success, 200: Success
             return "redirect:/";
         }
@@ -99,7 +100,8 @@ public class AuthController {
             return "redirect:/auth";
         }
 
-        User returnedUser = userRepository.save(new User(email, firstname, lastname, dateOfBirthWithTypeDate, gender, contact, address, postalCode, country, new UserAccount(username, password)));
+        User returnedUser = userRepository.save(new User(email, firstname, lastname, dateOfBirthWithTypeDate, gender,
+                contact, address, postalCode, country, new UserAccount(username, BCrypt.hashpw(password, BCrypt.gensalt()))));
         if (returnedUser != null) {
             // Authentication success, 200: Success
             return "redirect:/";
