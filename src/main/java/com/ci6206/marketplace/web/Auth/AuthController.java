@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,7 +30,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public String login(@RequestParam(name="loginEmail") String email, @RequestParam(name="loginPassword") String password,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes, HttpSession session) {
 
         if ("".equals(email) || "".equals(password)) {
             redirectAttributes.addFlashAttribute("display", "show");
@@ -47,6 +48,8 @@ public class AuthController {
 
         if (BCrypt.checkpw(password, loginUser.getUserAccount().getPassword())) {
             // Authentication success, 200: Success
+            session.setAttribute("email", email);
+            session.setAttribute("username", loginUser.getUserAccount().getUsername());
             return "redirect:/";
         }
 
