@@ -45,9 +45,11 @@ public class UserAccount implements Serializable {
         return this.username;
     }
 
-    private String getPassword() {
+    public String getPassword() {
         return this.password;
     }
+
+    public String getRole() { return this.role; }
 
     public String getActive() {
         return this.active;
@@ -69,6 +71,8 @@ public class UserAccount implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public void setRole(String role) { this.role = role; }
 
     public void setActive(String active) {
         this.active = active;

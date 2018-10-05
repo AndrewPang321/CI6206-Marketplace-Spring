@@ -36,34 +36,22 @@ public class AuthController {
             return "redirect:/auth";
         }
 
-        // TODO: Successful authentication with DB
-        Boolean success = true;
-        if (success) {
-            // Authentication success, 200: Success
-            return "redirect:/";
-        } else if (!success){
+        User loginUser = userRepository.findByEmail(email);
+        if (loginUser == null) {
             // Authentication fail, 400: Bad Request
             redirectAttributes.addFlashAttribute("display", "show");
-            redirectAttributes.addFlashAttribute("msg", "Incorrect Email/Password");
+            redirectAttributes.addFlashAttribute("msg", "Incorrect email");
             return "redirect:/auth";
         }
 
-        /*if (!"".equals(email) && !"".equals(password)) {
-            // TODO: Successful authentication with DB (Separation with this function)
-            Boolean success = true;
-            if (success) {
-                // Authentication success, 200: Success
-                return "redirect:/";
-            } else {
-                // Authentication fail, 400: Bad Request
-                redirectAttributes.addFlashAttribute("display", "show");
-                redirectAttributes.addFlashAttribute("msg", "Incorrect Email/Password");
-                return "redirect:/auth";
-            }
-        }*/
+        if (password.equals(loginUser.getUserAccount().getPassword())) {
+            // Authentication success, 200: Success
+            return "redirect:/";
+        }
 
+        // Authentication fail, 400: Bad Request
         redirectAttributes.addFlashAttribute("display", "show");
-        redirectAttributes.addFlashAttribute("msg", "Some problems occur. Please try again");
+        redirectAttributes.addFlashAttribute("msg", "Incorrect password");
         return "redirect:/auth";
     }
 
@@ -71,13 +59,15 @@ public class AuthController {
     public String signup(@RequestParam(name="signupEmail") String email, @RequestParam(name="signupPassword") String password,
             @RequestParam(name="signupConfirmPassword") String confirmedPassword, @RequestParam(name="signupFirstName") String firstname,
             @RequestParam(name="signupLastName") String lastname, @RequestParam(name="signupDateOfBirth") String dateOfBirth,
-            @RequestParam(name="signupGender") String gender, @RequestParam(name="signupContact") int contact,
-            @RequestParam(name="signupAddress") String address, @RequestParam(name="signupPostalCode") int postalCode,
-            @RequestParam(name="signupCountry") String country, RedirectAttributes redirectAttributes) {
+            @RequestParam(name="signupGender") String gender, @RequestParam(name="signupUsername") String username,
+            @RequestParam(name="signupContact") int contact, @RequestParam(name="signupAddress") String address,
+            @RequestParam(name="signupPostalCode") int postalCode, @RequestParam(name="signupCountry") String country,
+            RedirectAttributes redirectAttributes) {
 
         if ("".equals(email) || "".equals(password) || "".equals(confirmedPassword) || "".equals(firstname) ||
-                "".equals(lastname) || "".equals(dateOfBirth) || "".equals(gender) || "".equals(String.valueOf(contact)) ||
-                "".equals(address) || "".equals(String.valueOf(postalCode)) || "".equals(country)) {
+                "".equals(lastname) || "".equals(dateOfBirth) || "".equals(gender) || "".equals(username) ||
+                "".equals(String.valueOf(contact)) || "".equals(address) || "".equals(String.valueOf(postalCode)) ||
+                "".equals(country)) {
             redirectAttributes.addFlashAttribute("display", "show");
             redirectAttributes.addFlashAttribute("msg", "Some fields are empty");
             return "redirect:/auth";
@@ -109,7 +99,7 @@ public class AuthController {
             return "redirect:/auth";
         }
 
-        User returnedUser = userRepository.save(new User(email, firstname, lastname, dateOfBirthWithTypeDate, gender, contact, address, postalCode, country, new UserAccount(email, password)));
+        User returnedUser = userRepository.save(new User(email, firstname, lastname, dateOfBirthWithTypeDate, gender, contact, address, postalCode, country, new UserAccount(username, password)));
         if (returnedUser != null) {
             // Authentication success, 200: Success
             return "redirect:/";
