@@ -48,8 +48,7 @@ public class AuthController {
 
         if (BCrypt.checkpw(password, loginUser.getUserAccount().getPassword())) {
             // Authentication success, 200: Success
-            session.setAttribute("email", email);
-            session.setAttribute("username", loginUser.getUserAccount().getUsername());
+            saveUserSession(session, loginUser);
             return "redirect:/";
         }
 
@@ -66,7 +65,7 @@ public class AuthController {
             @RequestParam(name="signupGender") String gender, @RequestParam(name="signupUsername") String username,
             @RequestParam(name="signupContact") int contact, @RequestParam(name="signupAddress") String address,
             @RequestParam(name="signupPostalCode") int postalCode, @RequestParam(name="signupCountry") String country,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes, HttpSession session) {
 
         if ("".equals(email) || "".equals(password) || "".equals(confirmedPassword) || "".equals(firstname) ||
                 "".equals(lastname) || "".equals(dateOfBirth) || "".equals(gender) || "".equals(username) ||
@@ -103,16 +102,29 @@ public class AuthController {
             return "redirect:/auth";
         }
 
-        User returnedUser = userRepository.save(new User(email, firstname, lastname, dateOfBirthWithTypeDate, gender,
+        User signUpUser = userRepository.save(new User(email, firstname, lastname, dateOfBirthWithTypeDate, gender,
                 contact, address, postalCode, country, new UserAccount(username, BCrypt.hashpw(password, BCrypt.gensalt()))));
-        if (returnedUser != null) {
+        if (signUpUser != null) {
             // Authentication success, 200: Success
+            saveUserSession(session, signUpUser);
             return "redirect:/";
         }
 
         redirectAttributes.addFlashAttribute("display", "show");
         redirectAttributes.addFlashAttribute("msg", "Some problems occur. Please try again");
         return "redirect:/auth";
+    }
+
+    private void saveUserSession(HttpSession session, User user) {
+        session.setAttribute("user", user);
+    }
+
+    private void destroyUserSession(HttpSession session) {
+        session.removeAttribute("user");
+    }
+
+    public User getUserSession(HttpSession session) {
+        return (User) session.getAttribute("user");
     }
 
 }
